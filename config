@@ -35,7 +35,7 @@ set $right ccedilla
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec urxvt
+bindsym $mod+Return exec urxvtc
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -81,8 +81,8 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
+# bindsym $mod+s layout stacking
+# bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
@@ -110,15 +110,15 @@ set $ws1 "1: "
 set $ws2 "2: "
 set $ws3 "3: "
 set $ws4 "4: "
-set $ws5 "5"
-set $ws6 "6"
-set $ws7 "7"
-set $ws8 "8"
-set $ws9 "9"
-set $ws10 "10"
+set $ws5 "5: "
+set $ws6 "6: "
+set $ws7 "7: "
+set $ws8 "8: "
+set $ws9 "9: "
+set $ws10 "10: "
 
 
-# switch to workspace
+# Switch to workspace
 bindsym $mod+1 workspace $ws1
 bindsym $mod+2 workspace $ws2
 bindsym $mod+3 workspace $ws3
@@ -144,11 +144,9 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 
 smart_gaps on
 gaps outer 0
+gaps inner 4
 #assign gaps by workspace
-workspace $ws1 gaps inner 8 
-workspace $ws2 gaps inner 4 
-workspace $ws3 gaps inner 4 
-workspace $ws4 gaps inner 8 
+
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -158,14 +156,18 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
 #clip board manager
-bindsym $mod+Shift+a exec /home/augusto/clipmenu/clipmenu
-bindsym $mod+Shift+d exec /home/augusto/clipmenu/clipdel -d ".*"
+bindsym $mod+Shift+a exec ~/clipmenu/clipmenu
+bindsym $mod+Shift+d exec ~/clipmenu/clipdel -d ".*"
+
+#mount and unmount
+bindsym $mod+m exec ~/Documents/scripts/dmenumount.sh
+bindsym $mod+u exec ~/Documents/scripts/dmenuumount.sh
 
 #Force programs to open in a fixed workspace
 assign [class="Emacs"] $ws1
 assign [class="qutebrowser"] $ws2
 for_window [class="Spotify"] move to workspace $ws4
-for_window [class="Spotify"] floating enable
+
 
 #border
 for_window [class="^.*"] border pixel 0
@@ -204,10 +206,16 @@ bar {
         status_command i3blocks -c ~/.i3/i3blocks.conf
 	position top
 	colors {
-	       background #222222
-}
-}
+	       	       background #222222
+		       statusline #ffffff 
+		       separator #666666
 
+		       focused_workspace  #4c9974 #287755 #ffffff
+		       active_workspace   #333333 #5f676a #ffffff
+		       inactive_workspace #333333 #444444 #aaaaaa
+		       urgent_workspace   #2f343a #009000 #ffffff
+}
+}
 
 bindsym $mod+Shift+x exec i3lock -c 000000
 
@@ -229,11 +237,22 @@ bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioPrev exec playerctl previous
 
+
+# Desktop screenshot
+bindsym --release Print exec "scrot ~/Pictures/$(date --iso-8601='seconds').png -m -e 'xclip -selection c -t image/png < $f'"
+# Choose window
+bindsym --release Mod1+Sys_Req exec "import -window `xwininfo | awk '/.*Window id:.*/ {print $4}'` ~/Bilder/Bildschirmfotos/$(date --iso-8601='seconds').png"
+# Selection screenshot
+bindsym --release Shift+Print exec "scrot ~/Pictures/$(date --iso-8601='seconds').png -s -e 'xclip -selection c -t image/png < $f'"
+
 set $mode_gaps Gaps: (o) outer, (i) inner
 set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
 set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
+
+
 bindsym $mod+Shift+g mode "$mode_gaps"
- 
+
+
 mode "$mode_gaps" {
         bindsym o      mode "$mode_gaps_outer"
         bindsym i      mode "$mode_gaps_inner"
@@ -268,7 +287,10 @@ mode "$mode_gaps_outer" {
 
 exec synclient VertScrollDelta=-111
 exec_always feh --bg-scale /home/augusto/Pictures/wp4.jpeg
-exec compton
+exec compton --config ~/.config/.compton.conf
 exec redshift -l 39.38:-7.99
 exec_always dunst
 exec /home/augusto/clipmenu/clipmenud
+exec urxvtd
+exec firefox https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Futuroscope_%28France_2014%29_06_View_from_the_Gyrotour.JPG/1200px-Futuroscope_%28France_2014%29_06_View_from_the_Gyrotour.JPG
+exec qutebrowser
