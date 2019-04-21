@@ -106,16 +106,16 @@ bindsym $mod+minus scratchpad show
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1: "
-set $ws2 "2: "
-set $ws3 "3: "
-set $ws4 "4: "
-set $ws5 "5: "
-set $ws6 "6: "
-set $ws7 "7: "
-set $ws8 "8: "
-set $ws9 "9: "
-set $ws10 "10: "
+set $ws1 "1: $_"
+set $ws2 "2: +"
+set $ws3 "3: -"
+set $ws4 "4: ♪"
+set $ws5 "5: ⚡"
+set $ws6 "6: ⚡"
+set $ws7 "7: ⚡"
+set $ws8 "8: ⚡"
+set $ws9 "9: ⚡"
+set $ws10 "10: ⚡"
 
 
 # Switch to workspace
@@ -153,27 +153,27 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec i3-msg exit
 
 #clip board manager
 bindsym $mod+Shift+a exec ~/clipmenu/clipmenu
 bindsym $mod+Shift+d exec ~/clipmenu/clipdel -d ".*"
 
 #mount and unmount
-bindsym $mod+m exec ~/Documents/scripts/dmenumount.sh
-bindsym $mod+u exec ~/Documents/scripts/dmenuumount.sh
+bindsym $mod+Shift+m exec ~/Documents/scripts/dmenumount.sh
+bindsym $mod+Shift+u exec ~/Documents/scripts/dmenuumount.sh
 
 #Force programs to open in a fixed workspace
 assign [class="Emacs"] $ws1
-assign [class="qutebrowser"] $ws2
+assign [class="Firefox"] $ws2
 for_window [class="Spotify"] move to workspace $ws4
-
 
 #border
 for_window [class="^.*"] border pixel 0
 
 
 # resize window (you can also use the mouse for that)
+
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
 
@@ -181,21 +181,21 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym $left       resize shrink width 10 px or 10 ppt
-        bindsym $down       resize grow height 10 px or 10 ppt
-        bindsym $up         resize shrink height 10 px or 10 ppt
-        bindsym $right      resize grow width 10 px or 10 ppt
+	bindsym $left       resize shrink width 10 px or 10 ppt
+       bindsym $down       resize grow height 10 px or 10 ppt
+     bindsym $up         resize shrink height 10 px or 10 ppt
+    bindsym $right      resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left        resize shrink width 10 px or 10 ppt
-        bindsym Down        resize grow height 10 px or 10 ppt
+       bindsym Down        resize grow height 10 px or 10 ppt
         bindsym Up          resize shrink height 10 px or 10 ppt
         bindsym Right       resize grow width 10 px or 10 ppt
 
         # back to normal: Enter or Escape or $mod+r
         bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
+       bindsym Escape mode "default"
+      bindsym $mod+r mode "default"
 }
 
 bindsym $mod+r mode "resize"
@@ -203,7 +203,7 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        status_command i3blocks -c ~/.i3/i3blocks.conf
+        status_command i3blocks -c ~/.config/i3/i3blocks.conf
 	position top
 	colors {
 	       	       background #222222
@@ -217,7 +217,7 @@ bar {
 }
 }
 
-bindsym $mod+Shift+x exec i3lock -c 000000
+bindsym $mod+Shift+x exec "i3lock -c 000000 && playerctl pause"
 
 # Pulse Audio controls
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
@@ -225,8 +225,10 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #d
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 
 # Sreen brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 2 # increase screen brightness
-bindsym XF86MonBrightnessDown exec xbacklight -dec 2 # decrease screen brightness
+#bindsym XF86MonBrightnessUp exec xbacklight -inc 10 # increase screen brightness
+#bindsym XF86MonBrightnessDown exec xbacklight -dec 10 # decrease screen brightness
+bindsym XF86MonBrightnessUp exec light -A 5 # increase screen brightness
+bindsym XF86MonBrightnessDown exec light -U 5 # decrease screen brightness
 
 # Touchpad controls
 bindsym XF86TouchpadToggle exec /some/path/toggletouchpad.sh # toggle touchpad
@@ -254,8 +256,8 @@ bindsym $mod+Shift+g mode "$mode_gaps"
 
 
 mode "$mode_gaps" {
-        bindsym o      mode "$mode_gaps_outer"
-        bindsym i      mode "$mode_gaps_inner"
+       bindsym o      mode "$mode_gaps_outer"
+      bindsym i      mode "$mode_gaps_inner"
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
@@ -286,11 +288,11 @@ mode "$mode_gaps_outer" {
 }
 
 exec synclient VertScrollDelta=-111
-exec_always feh --bg-scale /home/augusto/Pictures/wp4.jpeg
+exec_always feh --bg-scale /home/augusto/Pictures/wp1.jpg
 exec compton --config ~/.config/.compton.conf
 exec redshift -l 39.38:-7.99
 exec_always dunst
 exec /home/augusto/clipmenu/clipmenud
 exec urxvtd
-exec firefox https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Futuroscope_%28France_2014%29_06_View_from_the_Gyrotour.JPG/1200px-Futuroscope_%28France_2014%29_06_View_from_the_Gyrotour.JPG
-exec qutebrowser
+exec firefox
+
