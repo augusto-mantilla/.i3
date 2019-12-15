@@ -54,10 +54,10 @@ bindsym $mod+$up focus up
 bindsym $mod+$right focus right
 
 # use the arrow keys for media control:
-bindsym Left exec playerctl previous
-bindsym Down exec playerctl play-pause
+bindsym KP_Left exec playerctl previous
+bindsym KP_Down exec playerctl play-pause
 #bindsym $mod+Up focus up
-bindsym Right exec playerctl next
+bindsym KP_Right exec playerctl next
 
 # move focused window
 bindsym $mod+Shift+$left move left
